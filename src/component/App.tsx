@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 interface Item {
@@ -12,15 +12,42 @@ interface Item {
 
 export const App = () => {
   const [request, setRequest] = useState<Item | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleFetch = async () => {
-    const response = await axios.get<Item>(
-      "http://localhost:3000/item/getItem"
-    );
-    console.log(response.data);
-    setRequest(response.data);
-    console.log(response.data);
-    console.log(request);
+  const [rarity, setRarity] = useState("");
+
+  useEffect(() => {
+    if (request?.data) {
+      switch (request.data.rarity) {
+        case "COMMON":
+          setRarity("Comum");
+          break;
+        case "RARE":
+          setRarity("Raro");
+          break;
+        case "EPIC":
+          setRarity("Épico");
+          break;
+        case "LEGENDARY":
+          setRarity("Lendário");
+          break;
+        default:
+          setRarity("Comum");
+      }
+    }
+  }, [request]);
+  const handleFetch = () => {
+    setLoading(true);
+
+    axios
+      .get<Item>("http://localhost:3000/item/getItem")
+      .then((response) => {
+        console.log(response.data);
+        setRequest(response.data);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
@@ -30,15 +57,35 @@ export const App = () => {
           <h1>Pegar Item do Outro Lado</h1>
         </div>
 
-        {request &&
-          (console.log(request.data),
-          (
+        {loading ? (
+          <p className="text-2xl mt-5">Carregando...</p>
+        ) : (
+          request && (
             <div className="flex flex-col items-center mt-5">
               <div className="flex flex-col items-center">
                 <h1 className="text-2xl">Item: {request.data.name}</h1>
+                <div className="text-[1.24567rem] flex">
+                  <h1 className="mr-1">Raridade: </h1>
+                  <h2
+                    className={` ${
+                      request.data.rarity === "COMMON"
+                        ? "text-green-500"
+                        : request.data.rarity === "RARE"
+                        ? "text-blue-500"
+                        : request.data.rarity === "EPIC"
+                        ? "text-violet-500"
+                        : request.data.rarity === "LEGENDARY"
+                        ? "text-yellow-500"
+                        : "" // Adicione outras condições conforme necessário
+                    }`}
+                  >
+                    {rarity.toLowerCase()}
+                  </h2>
+                </div>
               </div>
             </div>
-          ))}
+          )
+        )}
 
         <div className="mt-auto mb-5">
           <button
