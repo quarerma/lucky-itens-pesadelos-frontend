@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 interface Item {
   data: {
@@ -13,6 +14,7 @@ interface Item {
 export const App = () => {
   const [request, setRequest] = useState<Item | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const [rarity, setRarity] = useState("");
 
@@ -36,29 +38,36 @@ export const App = () => {
       }
     }
   }, [request]);
+
   const handleFetch = () => {
     setLoading(true);
+    setError(null);
 
     axios
-      .get<Item>("http://localhost:3000/item/getItem")
+      .get<Item>("https://lucky-itens-pesadelos-backend.onrender.com/item/getItem")
       .then((response) => {
         console.log(response.data);
         setRequest(response.data);
+      })
+      .catch((error) => {
+        console.error("Erro na solicitação:", error);
+        setError("Erro ao carregar o item. Tente novamente.");
       })
       .finally(() => {
         setLoading(false);
       });
   };
-
   return (
     <div className="bg-purple-700 w-screen h-screen flex items-center justify-center font-singleDay text-purple-950">
-      <div className="h-[40vh] w-fit bg-white rounded-[30px] shadow-2xl border border-black flex flex-col items-center">
+      <div className="h-[260px] w-fit bg-white rounded-[30px] shadow-2xl border border-black flex flex-col items-center">
         <div className="text-center mt-5 px-16 text-3xl flex flex-col">
           <h1>Pegar Item do Outro Lado</h1>
         </div>
 
         {loading ? (
           <p className="text-2xl mt-5">Carregando...</p>
+        ) : error ? (
+          <p className="text-red-500 text-2xl mt-5 text-center">{error}</p> // Exibe a mensagem de erro
         ) : (
           request && (
             <div className="flex flex-col items-center mt-5">
@@ -95,6 +104,13 @@ export const App = () => {
             Conjurar Ritual
           </button>
         </div>
+      </div>
+      <div className="absolute top-0">
+        <Link to={"/add"}>
+          <div className="rounded-[24px] w-full h-full cursor-pointer hover:scale-125 bg-white text-[1.5rem] mt-5">
+            <h1 className="m-1">Adicionar Item</h1>
+          </div>
+        </Link>
       </div>
     </div>
   );
