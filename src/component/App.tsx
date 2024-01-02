@@ -44,7 +44,9 @@ export const App = () => {
     setError(null);
 
     axios
-      .get<Item>("https://lucky-itens-pesadelos-backend.onrender.com/item/getItem")
+      .get<Item>(
+        "https://lucky-itens-pesadelos-backend.onrender.com/item/getItem"
+      )
       .then((response) => {
         console.log(response.data);
         setRequest(response.data);
@@ -101,7 +103,7 @@ export const App = () => {
             className="w-full py-2 px-2 rounded-[15px] text-2xl border border-purple-950 shadow-2xl z-10 bg-purple-500 text-white"
             onClick={handleFetch}
           >
-            Conjurar Ritual
+            Conjurar Ritual!
           </button>
         </div>
       </div>
