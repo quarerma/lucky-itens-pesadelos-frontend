@@ -59,6 +59,7 @@ export const App = () => {
         setLoading(false);
       });
   };
+
   return (
     <div className="bg-purple-700 w-screen h-screen flex items-center justify-center font-singleDay text-purple-950">
       <div className="h-[260px] w-fit bg-white rounded-[30px] shadow-2xl border border-black flex flex-col items-center">
@@ -69,34 +70,34 @@ export const App = () => {
         {loading ? (
           <p className="text-2xl mt-5">Carregando...</p>
         ) : error ? (
-          <p className="text-red-500 text-2xl mt-5 text-center">{error}</p> // Exibe a mensagem de erro
-        ) : (
-          request && (
-            <div className="flex flex-col items-center mt-5">
-              <div className="flex flex-col items-center">
-                <h1 className="text-2xl">Item: {request.data.name}</h1>
-                <div className="text-[1.24567rem] flex">
-                  <h1 className="mr-1">Raridade: </h1>
-                  <h2
-                    className={` ${
-                      request.data.rarity === "COMMON"
-                        ? "text-green-500"
-                        : request.data.rarity === "RARE"
-                        ? "text-blue-500"
-                        : request.data.rarity === "EPIC"
-                        ? "text-violet-500"
-                        : request.data.rarity === "LEGENDARY"
-                        ? "text-yellow-500"
-                        : "" // Adicione outras condições conforme necessário
-                    }`}
-                  >
-                    {rarity.toLowerCase()}
-                  </h2>
-                </div>
+          <p className="text-red-500 text-2xl mt-5 text-center">{error}</p>
+        ) : request && request.data ? (
+          <div className="flex flex-col items-center mt-5">
+            <div className="flex flex-col items-center">
+              <h1 className="text-2xl">
+                Item: {request.data.name || "Nome Indefinido"}
+              </h1>
+              <div className="text-[1.24567rem] flex">
+                <h1 className="mr-1">Raridade: </h1>
+                <h2
+                  className={` ${
+                    request.data.rarity === "COMMON"
+                      ? "text-green-500"
+                      : request.data.rarity === "RARE"
+                      ? "text-blue-500"
+                      : request.data.rarity === "EPIC"
+                      ? "text-violet-500"
+                      : request.data.rarity === "LEGENDARY"
+                      ? "text-yellow-500"
+                      : ""
+                  }`}
+                >
+                  {rarity.toLowerCase() || "Raridade Indefinida"}
+                </h2>
               </div>
             </div>
-          )
-        )}
+          </div>
+        ) : null}
 
         <div className="mt-auto mb-5">
           <button
