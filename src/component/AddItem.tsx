@@ -66,7 +66,7 @@ export const AddItem = () => {
             type="text"
             placeholder="Nome"
             value={itemName}
-            onChange={(e) => setItemName(e.target.value)}
+            onChange={(e) => setItemName(e.target.value.toLowerCase())}
             className="border text-2xl px-2 border-purple-700 placeholder-purple-700 focus:outline-none  rounded-[24px] py-1"
           />
           <div className="text-1xl items-center  mt-5 relative">
